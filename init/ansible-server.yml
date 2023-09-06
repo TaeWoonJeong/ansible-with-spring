@@ -1,0 +1,24 @@
+---
+- name: Setup Ansible Server
+  hosts: localhost
+  become: yes
+  gather_facts: no
+
+  tasks:
+    - name: Add "/etc/ansible/hosts"
+      blockinfile:
+        path: /etc/ansible/hosts
+        block: |
+          [nodes]
+          192.168.219.[101:102]
+          192.168.219.[201:202]
+          [db]
+          192.168.219.150
+
+    - name: Configure Bashrc
+      lineinfile:
+        path: /home/vagrant/.bashrc
+        line: "{{ item }}"
+      with_items:
+        - "alias ans='ansible'"
+        - "alias anp='ansible-playbook'"

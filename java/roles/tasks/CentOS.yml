@@ -1,0 +1,8 @@
+- name: Download Java Repository RPM
+  get_url:
+    headers:
+      user-agent: curl/7.81.0
+    url: https://download.oracle.com/java/17/latest/jdk-17_linux-x64_bin.rpm
+    dest: /tmp/jdk-17_linux-x64_bin.rpm
+- name: Install Java RPM
+  action: "{{ ansible_pkg_mgr }} name=/tmp/jdk-17_linux-x64_bin.rpm state=present"

@@ -1,0 +1,58 @@
+- name: Install MySQL, MongoDB, and Redis
+  hosts: db
+  become: yes
+  tasks:
+    - name: Install epel-release for {{ ansible_distribution }}
+      action: "{{ ansible_pkg_mgr }} name=epel-release state=latest"
+
+    - name: Download MySQL repository RPM
+      get_url:
+        headers:
+          user-agent: curl/7.81.0
+        url: https://dev.mysql.com/get/mysql80-community-release-el7-6.noarch.rpm
+        dest: /tmp/mysql80-community-release-el7-6.noarch.rpm
+
+    - name: Install MySQL RPM
+      yum:
+        name: /tmp/mysql80-community-release-el7-6.noarch.rpm
+        state: present
+
+    - name: Disable GPG check for mysql80-community repo
+      shell: sed -i 's/gpgcheck=1/gpgcheck=0/' /etc/yum.repos.d/mysql-community.repo
+
+    - name: Install MySQL-Server
+      yum:
+        name: mysql-server
+        state: present
+
+    - name: Start MySQL service
+      service:
+        name: mysqld
+        state: started
+        enabled: yes
+
+    - name: Install Redis
+      yum:
+        name: redis
+        state: present
+
+    - name: Disable Redis bind
+      shell: sed -i 's/bind 127.0.0.1/# bind 127.0.0.1/' /etc/redis.conf
+
+    - name: Disable Redis protected-mode
+      shell: sed -i 's/protected-mode yes/protected-mode no/' /etc/redis.conf
+
+    - name: Start Redis service
+      service:
+        name: redis
+        state: started
+        enabled: yes
+
+    - name: Copy MySQL password script to remote node
+      copy:
+        src: mysql-init.sh
+        dest: /tmp/mysql-init.sh
+        mode: "0755"
+
+    - name: Execute MySQL password script
+      command: /tmp/mysql-init.sh

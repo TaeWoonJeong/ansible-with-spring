@@ -1,0 +1,20 @@
+---
+- name: Send Spring And Run
+  hosts: nodes
+  become: yes
+
+  tasks:
+    - name: Send application.yml
+      copy:
+        src: application.yml
+        dest: /home/vagrant/
+        mode: "0755"
+
+    - name: Send Spring
+      copy:
+        src: ansible-spring.jar
+        dest: /home/vagrant/
+        mode: "0755"
+
+    - name: Run Spring
+      shell: "nohup java -jar -Dspring.config.location=/home/vagrant/application.yml ansible-spring.jar 1>>spring.log 2>>spring-error.log &"

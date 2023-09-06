@@ -1,0 +1,8 @@
+---
+- name: port from 80 to 8080
+  copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+    mode: 0644
+  notify:
+    - restart nginx web server

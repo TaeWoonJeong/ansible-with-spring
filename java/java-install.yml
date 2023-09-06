@@ -1,0 +1,7 @@
+---
+- name: Install java on the nodes
+  hosts: nodes
+  become: yes
+
+  roles:
+    - role: ./roles

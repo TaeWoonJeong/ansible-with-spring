@@ -1,0 +1,2 @@
+- name: Install java for {{ ansible_distribution }}
+  action: "{{ ansible_pkg_mgr }} name=openjdk-17-jdk state=present update_cache=yes"
