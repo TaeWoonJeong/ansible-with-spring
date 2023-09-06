@@ -22,9 +22,3 @@ EOF
 mysql -u root -p"Abcd1234!" <<EOF
 CREATE DATABASE ansible;
 EOF
-
-if [ $? -eq 0 ]; then
-  echo "Password changed successfully."
-else
-  echo "Password change failed."
-fi
